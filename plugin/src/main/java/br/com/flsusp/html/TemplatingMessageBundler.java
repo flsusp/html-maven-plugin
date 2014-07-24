@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Properties;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.plexus.interpolation.InterpolationException;
@@ -36,8 +38,26 @@ class TemplatingMessageBundler implements MessageBundler {
         try {
             final String content = readString(input);
             final String result = interpolator.interpolate(content);
+            writeString(result, output);
         } catch (InterpolationException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private String readString(InputStream input) {
+        try (StringWriter sw = new StringWriter()) {
+            IOUtils.copy(input, sw);
+            return sw.toString();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    private void writeString(String result, OutputStream output) {
+        try (StringReader sr = new StringReader(result)) {
+            IOUtils.copy(sr, output);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
     }
 }
