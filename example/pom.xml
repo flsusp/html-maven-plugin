@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+        <modelVersion>4.0.0</modelVersion>
+        <parent>
+                <artifactId>html-maven-plugin-parent</artifactId>
+                <groupId>br.com.flsusp.html</groupId>
+                <version>1.0.0-SNAPSHOT</version>
+        </parent>
+        <groupId>br.com.flsusp.html</groupId>
+        <artifactId>example</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <packaging>war</packaging>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>br.com.flsusp.html</groupId>
+				<artifactId>html-maven-plugin</artifactId>
+				<version>1.0.0-SNAPSHOT</version>
+				<executions>
+					<execution>
+						<id>html</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>html</goal>
+						</goals>
+						<configuration>
+							<bundle-i18n></bundle-i18n>
+							<bundle-file>messages.properties</bundle-file>
+                                                        <source>static</source>
+							<target>release</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
