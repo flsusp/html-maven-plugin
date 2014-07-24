@@ -26,8 +26,7 @@
 							<goal>html</goal>
 						</goals>
 						<configuration>
-							<bundle-i18n></bundle-i18n>
-							<bundle-file>messages.properties</bundle-file>
+							<bundle>messages.properties</bundle>
                                                         <source>static</source>
 							<target>release</target>
 						</configuration>

@@ -16,11 +16,8 @@ public class BuildMojo extends AbstractMojo {
     @Parameter(property = "project", required = true, readonly = true)
     private MavenProject project;
 
-    @Parameter(property = "bundle-file", required = false, readonly = true)
-    private String bundleFile = "messages.properties";
-
-    @Parameter(property = "bundle-i18n", required = false, readonly = true)
-    private String bundleI18N = "";
+    @Parameter(property = "bundle", required = false, readonly = true)
+    private String bundle = "messages.properties";
 
     @Parameter(property = "source", required = false, readonly = true)
     private String source = "static";
@@ -33,7 +30,7 @@ public class BuildMojo extends AbstractMojo {
         final File output = getOutputDir();
 
         WebApp webapp = new WebApp();
-        webapp.useBundleMessages(bundleFile, bundleI18N);
+        webapp.useBundleMessages(project.getBasedir(), bundle);
 
         final File[] files = src.listFiles(new HtmlFileFilter());
         Arrays.stream(files).parallel().forEach((file) -> webapp.parseHTML(file));
@@ -64,12 +61,8 @@ public class BuildMojo extends AbstractMojo {
         this.project = project;
     }
 
-    public void setBundleFile(String bundleFile) {
-        this.bundleFile = bundleFile;
-    }
-
-    public void setBundleI18N(String bundleI18N) {
-        this.bundleI18N = bundleI18N;
+    public void setBundle(String bundle) {
+        this.bundle = bundle;
     }
 
     public void setSource(String source) {

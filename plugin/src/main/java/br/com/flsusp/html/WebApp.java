@@ -4,15 +4,17 @@ import java.io.File;
 
 class WebApp {
 
-    void useBundleMessages(String bundleFile, String bundleI18N) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+    private MessageBundler bundler = new DoNothingMessageBundler();
+
     void parseHTML(File file) {
         
     }
 
     void outputFilesTo(File output) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    void useBundleMessages(File baseDir, String bundle) {
+        this.bundler = new TemplatingMessageBundler(baseDir, bundle);
     }
 }
