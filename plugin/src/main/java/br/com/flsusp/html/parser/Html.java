@@ -45,10 +45,8 @@ public class Html {
 		}
 
 		public int numberOfJsScripts() {
-			return (int) element
-					.childNodes()
-					.stream()
-					.filter((node) -> "script".equalsIgnoreCase(node.nodeName())).count();
+			return (int) element.childNodes().stream().filter((node) -> "script".equalsIgnoreCase(node.nodeName()))
+					.count();
 		}
 
 		public int numberOfLessLinks() {
