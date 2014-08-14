@@ -1,10 +1,15 @@
 package br.com.flsusp.html;
 
+import com.asual.lesscss.LessEngine;
+
 import br.com.flsusp.html.parser.Html;
+
+import java.io.File;
 
 public class LessProcessor {
 
 	private final WebAppFolder root;
+	private final LessEngine engine = new LessEngine();
 
 	public LessProcessor(WebAppFolder root) {
 		this.root = root;
@@ -17,12 +22,26 @@ public class LessProcessor {
 	}
 
 	private void compile() {
-		// TODO Auto-generated method stub
+        // TODO
+        // Execute compilation in each substitution
+        // Execute substitutions
+		
+//		String text = engine.compile("div { width: 1 + 1 }");
+//		String url = engine.compile(getClass().getClassLoader().getResource("META-INF/test.css"));
+//		engine.compile(new File("/Users/User/Projects/styles.less"),
+//		               new File("/Users/User/Projects/styles.css"));
 	}
 
 	private void process(Html html) {
-		// TODO
-	}
+        html.head().forEach((node) -> "link".equalsIgnoreCase(node.nodeName())
+                && "text/less".equalsIgnoreCase(node.attr("type")), (node) -> {
+            String href = node.attr("href");
+            // TODO
+            // Search file
+            // Create a substitution handler
+            // Store the substitution
+        });
+    }
 
 	private class LoadHtmlFiles implements WebAppItemProcessor {
 

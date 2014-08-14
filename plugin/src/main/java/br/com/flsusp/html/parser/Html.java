@@ -56,5 +56,9 @@ public class Html {
 					.filter((node) -> "link".equalsIgnoreCase(node.nodeName())
 							&& "text/less".equalsIgnoreCase(node.attr("type"))).count();
 		}
-	}
+
+        public void forEach(NodeFilter filter, ForEachNode action) {
+            element.childNodes().stream().filter((node) -> filter.filter(node)).forEach((node) -> action.each(node));
+        }
+    }
 }
