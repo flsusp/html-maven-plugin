@@ -3,10 +3,7 @@ package br.com.flsusp.html;
 import br.com.flsusp.html.parser.Html;
 import org.apache.commons.io.IOUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 interface WebAppItemProcessor {
@@ -16,6 +13,11 @@ interface WebAppItemProcessor {
 
     default void process(WebAppFile file) {
     }
+}
+
+interface ContentProcessor {
+
+    void process(InputStream input, OutputStream output);
 }
 
 interface WebAppItem {
@@ -117,9 +119,12 @@ class WebAppFile implements WebAppItem {
 
     private final File file;
     private boolean removed;
+    private String newName;
+    private List<ContentProcessor> contentProcessors = new ArrayList<>();
 
     public WebAppFile(File file) {
         this.file = file;
+        this.newName = file.getName();
     }
 
     @Override
@@ -127,10 +132,24 @@ class WebAppFile implements WebAppItem {
         if (removed)
             return;
 
-        final File destination = new File(file, this.file.getName());
+        final File destination = new File(file, getName());
         try (FileInputStream input = new FileInputStream(this.file);
              FileOutputStream output = new FileOutputStream(destination)) {
-            IOUtils.copy(input, output);
+
+            if (contentProcessors.isEmpty()) {
+                FileUtils.copy(input, output);
+            } else {
+                InputStream partialInput = input;
+                ByteArrayOutputStream partialOutput = new ByteArrayOutputStream();
+                for (ContentProcessor processor : contentProcessors) {
+                    processor.process(partialInput, partialOutput);
+
+                    partialInput = new ByteArrayInputStream(partialOutput.toByteArray());
+                    partialOutput = new ByteArrayOutputStream();
+                }
+
+                FileUtils.copy(partialInput, output);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -142,7 +161,7 @@ class WebAppFile implements WebAppItem {
     }
 
     public boolean isHtml() {
-        final String name = file.getName().toLowerCase();
+        final String name = getName().toLowerCase();
         return name.endsWith(".html") || name.endsWith(".htm") || name.endsWith(".xhtml");
     }
 
@@ -151,7 +170,7 @@ class WebAppFile implements WebAppItem {
     }
 
     public boolean isLess() {
-        final String name = file.getName().toLowerCase();
+        final String name = getName().toLowerCase();
         return name.endsWith(".less");
     }
 
@@ -160,11 +179,16 @@ class WebAppFile implements WebAppItem {
     }
 
     public String getName() {
-        return file.getName().toLowerCase();
+        return newName;
     }
 
     @Override
     public WebAppFile search(String[] path) {
         return this;
+    }
+
+    public void replace(String newName, ContentProcessor processor) {
+        this.newName = newName;
+        this.contentProcessors.add(processor);
     }
 }

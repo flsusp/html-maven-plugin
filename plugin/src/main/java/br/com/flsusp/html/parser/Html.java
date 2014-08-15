@@ -58,7 +58,7 @@ public class Html {
 		}
 
         public void forEach(NodeFilter filter, ForEachNode action) {
-            element.childNodes().stream().filter((node) -> filter.filter(node)).forEach((node) -> action.each(node));
+            element.childNodes().parallelStream().filter((node) -> filter.filter(node)).forEach((node) -> action.each(node));
         }
     }
 }
