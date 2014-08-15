@@ -133,6 +133,14 @@ class WebAppFile implements WebAppItem {
             return;
 
         final File destination = new File(file, getName());
+
+        try {
+            destination.getParentFile().mkdirs();
+            destination.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         try (FileInputStream input = new FileInputStream(this.file);
              FileOutputStream output = new FileOutputStream(destination)) {
 
